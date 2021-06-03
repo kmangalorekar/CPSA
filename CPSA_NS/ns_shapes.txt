@@ -1,0 +1,99 @@
+(comment "CPSA 3.6.6")
+(comment "Extracted shapes")
+
+(herald "Needham Schroder")
+
+(comment "CPSA 3.6.6")
+
+(comment "All input read from ns.scm")
+
+(defprotocol ns basic
+  (defrole alice
+    (vars (a b name) (Na Nb data))
+    (trace (send (enc Na a (pubk b))) (recv (enc Na Nb (pubk a)))
+      (send (enc Nb (pubk b)))))
+  (defrole bob
+    (vars (a b name) (Na Nb data))
+    (trace (recv (enc Na a (pubk b))) (send (enc Na Nb (pubk a)))
+      (recv (enc Nb (pubk b))))))
+
+(defskeleton ns
+  (vars (Na Nb data) (a b name))
+  (defstrand alice 3 (Na Na) (Nb Nb) (a a) (b b))
+  (non-orig (privk a) (privk b))
+  (uniq-orig Na)
+  (traces
+    ((send (enc Na a (pubk b))) (recv (enc Na Nb (pubk a)))
+      (send (enc Nb (pubk b)))))
+  (label 0)
+  (unrealized (0 1))
+  (origs (Na (0 0)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton ns
+  (vars (Na Nb data) (a b name))
+  (defstrand alice 3 (Na Na) (Nb Nb) (a a) (b b))
+  (defstrand bob 2 (Na Na) (Nb Nb) (a a) (b b))
+  (precedes ((0 0) (1 0)) ((1 1) (0 1)))
+  (non-orig (privk a) (privk b))
+  (uniq-orig Na)
+  (operation nonce-test (contracted (Nb-0 Nb)) Na (0 1)
+    (enc Na Nb (pubk a)) (enc Na a (pubk b)))
+  (traces
+    ((send (enc Na a (pubk b))) (recv (enc Na Nb (pubk a)))
+      (send (enc Nb (pubk b))))
+    ((recv (enc Na a (pubk b))) (send (enc Na Nb (pubk a)))))
+  (label 2)
+  (parent 0)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (Na Na) (Nb Nb))))
+  (origs (Na (0 0))))
+
+(comment "Nothing left to do")
+
+(defprotocol ns basic
+  (defrole alice
+    (vars (a b name) (Na Nb data))
+    (trace (send (enc Na a (pubk b))) (recv (enc Na Nb (pubk a)))
+      (send (enc Nb (pubk b)))))
+  (defrole bob
+    (vars (a b name) (Na Nb data))
+    (trace (recv (enc Na a (pubk b))) (send (enc Na Nb (pubk a)))
+      (recv (enc Nb (pubk b))))))
+
+(defskeleton ns
+  (vars (Na Nb data) (a b name))
+  (defstrand bob 3 (Na Na) (Nb Nb) (a a) (b b))
+  (non-orig (privk a) (privk b))
+  (uniq-orig Nb)
+  (traces
+    ((recv (enc Na a (pubk b))) (send (enc Na Nb (pubk a)))
+      (recv (enc Nb (pubk b)))))
+  (label 3)
+  (unrealized (0 2))
+  (origs (Nb (0 1)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton ns
+  (vars (Na Nb data) (a b b-0 name))
+  (defstrand bob 3 (Na Na) (Nb Nb) (a a) (b b))
+  (defstrand alice 3 (Na Na) (Nb Nb) (a a) (b b-0))
+  (precedes ((0 1) (1 1)) ((1 2) (0 2)))
+  (non-orig (privk a) (privk b))
+  (uniq-orig Nb)
+  (operation nonce-test (added-strand alice 3) Nb (0 2)
+    (enc Na Nb (pubk a)))
+  (traces
+    ((recv (enc Na a (pubk b))) (send (enc Na Nb (pubk a)))
+      (recv (enc Nb (pubk b))))
+    ((send (enc Na a (pubk b-0))) (recv (enc Na Nb (pubk a)))
+      (send (enc Nb (pubk b-0)))))
+  (label 4)
+  (parent 3)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (Na Na) (Nb Nb))))
+  (origs (Nb (0 1))))
+
+(comment "Nothing left to do")

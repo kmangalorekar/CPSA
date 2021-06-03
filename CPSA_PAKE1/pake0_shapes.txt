@@ -1,0 +1,272 @@
+(comment "CPSA 3.6.6")
+(comment "Extracted shapes")
+
+(herald "Pake")
+
+(comment "CPSA 3.6.6")
+
+(comment "All input read from pake0.scm")
+
+(defprotocol Pake basic
+  (defrole fourth
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t))))
+    (uniq-orig pk))
+  (defrole third
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (send Na) (recv Nb)
+      (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (recv Na) (send Nb)
+      (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand alice 5 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (uniq-orig Na)
+  (traces
+    ((obsv pk) (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 0)
+  (unrealized (0 0))
+  (origs (Na (0 1)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton Pake
+  (vars (Na Nb Nt Nf data) (a b t f name) (pk skey))
+  (defstrand alice 5 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (defstrand third 5 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (precedes ((1 4) (0 0)))
+  (leadsto ((1 4) (0 0)))
+  (uniq-orig Na)
+  (operation state-passing-test (added-strand third 5) pk (0 0))
+  (traces
+    ((obsv pk) (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (label 1)
+  (parent 0)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (Na Na) (Nb Nb) (pk pk))))
+  (origs (Na (0 1))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole fourth
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t))))
+    (uniq-orig pk))
+  (defrole third
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (send Na) (recv Nb)
+      (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (recv Na) (send Nb)
+      (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand bob 5 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (uniq-orig Nb)
+  (traces
+    ((obsv pk) (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 2)
+  (unrealized (0 0))
+  (origs (Nb (0 2)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton Pake
+  (vars (Na Nb Nt Nf data) (a b t f name) (pk skey))
+  (defstrand bob 5 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (defstrand third 5 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (precedes ((1 4) (0 0)))
+  (leadsto ((1 4) (0 0)))
+  (uniq-orig Nb)
+  (operation state-passing-test (added-strand third 5) pk (0 0))
+  (traces
+    ((obsv pk) (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (label 3)
+  (parent 2)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (Na Na) (Nb Nb) (pk pk))))
+  (origs (Nb (0 2))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole fourth
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t))))
+    (uniq-orig pk))
+  (defrole third
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (send Na) (recv Nb)
+      (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (recv Na) (send Nb)
+      (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Nt Nf data) (t f name) (pk skey))
+  (defstrand third 5 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (non-orig (privk t) (privk f))
+  (uniq-orig Nt)
+  (traces
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (label 4)
+  (unrealized (0 2) (0 3))
+  (origs (Nt (0 1)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton Pake
+  (vars (Nt Nf data) (t f name) (pk skey))
+  (defstrand third 5 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (defstrand fourth 4 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (precedes ((0 1) (1 1)) ((1 2) (0 2)) ((1 3) (0 3)))
+  (non-orig (privk t) (privk f))
+  (uniq-orig Nt pk)
+  (operation encryption-test (displaced 1 2 fourth 4)
+    (enc pk (hash Nf Nt)) (0 3))
+  (traces
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk))
+    ((send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t)))))
+  (label 6)
+  (parent 4)
+  (unrealized)
+  (shape)
+  (maps ((0) ((t t) (f f) (Nt Nt) (Nf Nf) (pk pk))))
+  (origs (pk (1 3)) (Nt (0 1))))
+
+(defskeleton Pake
+  (vars (Nt Nf data) (t f name) (pk skey))
+  (defstrand third 5 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (defstrand fourth 3 (Nt Nt) (Nf Nf) (t t) (f f))
+  (defstrand fourth 4 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (precedes ((0 1) (1 1)) ((0 1) (2 1)) ((1 2) (0 2)) ((2 3) (0 3)))
+  (non-orig (privk t) (privk f))
+  (uniq-orig Nt pk)
+  (operation nonce-test (contracted (t-0 t) (f-0 f)) Nt (2 1)
+    (enc Nf Nt t (pubk f)))
+  (traces
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk))
+    ((send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t))))
+    ((send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t)))))
+  (label 9)
+  (parent 4)
+  (unrealized)
+  (shape)
+  (maps ((0) ((t t) (f f) (Nt Nt) (Nf Nf) (pk pk))))
+  (origs (pk (2 3)) (Nt (0 1))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole fourth
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t))))
+    (uniq-orig pk))
+  (defrole third
+    (vars (t f name) (pk skey) (Nt Nf data))
+    (trace (recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))
+      (recv (enc Nt (pubk t)))
+      (recv (enc (enc pk (hash Nf Nt)) (pubk t))) (init pk)))
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (send Na) (recv Nb)
+      (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (obsv pk) (recv Na) (send Nb)
+      (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Nt Nf data) (t f name) (pk skey))
+  (defstrand fourth 4 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (non-orig (privk t) (privk f))
+  (uniq-orig Nf pk)
+  (traces
+    ((send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t)))))
+  (label 18)
+  (unrealized (0 1))
+  (origs (pk (0 3)) (Nf (0 0)))
+  (comment "1 in cohort - 1 not yet seen"))
+
+(defskeleton Pake
+  (vars (Nf Nt data) (t f name) (pk skey))
+  (defstrand fourth 4 (Nt Nt) (Nf Nf) (t t) (f f) (pk pk))
+  (defstrand third 2 (Nt Nt) (Nf Nf) (t t) (f f))
+  (precedes ((0 0) (1 0)) ((1 1) (0 1)))
+  (non-orig (privk t) (privk f))
+  (uniq-orig Nf pk)
+  (operation nonce-test (contracted (Nt-0 Nt)) Nf (0 1)
+    (enc Nf f (pubk t)) (enc Nf Nt t (pubk f)))
+  (traces
+    ((send (enc Nf f (pubk t))) (recv (enc Nf Nt t (pubk f)))
+      (send (enc Nt (pubk t)))
+      (send (enc (enc pk (hash Nf Nt)) (pubk t))))
+    ((recv (enc Nf f (pubk t))) (send (enc Nf Nt t (pubk f)))))
+  (label 20)
+  (parent 18)
+  (unrealized)
+  (shape)
+  (maps ((0) ((t t) (f f) (Nt Nt) (Nf Nf) (pk pk))))
+  (origs (pk (0 3)) (Nf (0 0))))
+
+(comment "Nothing left to do")

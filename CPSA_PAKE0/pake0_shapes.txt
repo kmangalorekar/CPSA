@@ -1,0 +1,149 @@
+(comment "CPSA 3.6.6")
+(comment "Extracted shapes")
+
+(herald "Pake")
+
+(comment "CPSA 3.6.6")
+
+(comment "All input read from pake0.scm")
+
+(defprotocol Pake basic
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand alice 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (pen-non-orig pk)
+  (uniq-orig Na)
+  (traces
+    ((send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 0)
+  (unrealized (0 3))
+  (origs (Na (0 0)))
+  (comment "2 in cohort - 2 not yet seen"))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand alice 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (defstrand bob 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (precedes ((0 0) (1 0)) ((0 2) (1 2)) ((1 3) (0 3)))
+  (pen-non-orig pk)
+  (uniq-orig Na)
+  (operation encryption-test (displaced 2 0 alice 3)
+    (hash (hash pk a b Na Nb)) (1 2))
+  (traces
+    ((send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))
+    ((recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 3)
+  (parent 0)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (pk pk) (Na Na) (Nb Nb))))
+  (origs (Na (0 0))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand bob 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (pen-non-orig pk)
+  (uniq-orig Nb)
+  (traces
+    ((recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 10)
+  (unrealized (0 2))
+  (origs (Nb (0 1)))
+  (comment "2 in cohort - 2 not yet seen"))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand bob 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (defstrand alice 3 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (precedes ((0 1) (1 1)) ((1 2) (0 2)))
+  (pen-non-orig pk)
+  (uniq-orig Nb)
+  (operation encryption-test (added-strand alice 3)
+    (hash (hash pk a b Na Nb)) (0 2))
+  (traces
+    ((recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))
+    ((send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))))
+  (label 11)
+  (parent 10)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (pk pk) (Na Na) (Nb Nb))))
+  (origs (Nb (0 1))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand alice 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (uniq-orig Na)
+  (traces
+    ((send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 14)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (pk pk) (Na Na) (Nb Nb))))
+  (origs (Na (0 0))))
+
+(comment "Nothing left to do")
+
+(defprotocol Pake basic
+  (defrole alice
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (send Na) (recv Nb) (send (hash (hash pk a b Na Nb)))
+      (recv (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (defrole bob
+    (vars (a b name) (pk skey) (Na Nb data))
+    (trace (recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb))))))
+
+(defskeleton Pake
+  (vars (Na Nb data) (a b name) (pk skey))
+  (defstrand bob 4 (Na Na) (Nb Nb) (a a) (b b) (pk pk))
+  (uniq-orig Nb)
+  (traces
+    ((recv Na) (send Nb) (recv (hash (hash pk a b Na Nb)))
+      (send (hash (hash (hash pk a b Na Nb)) (hash pk a b Na Nb)))))
+  (label 15)
+  (unrealized)
+  (shape)
+  (maps ((0) ((a a) (b b) (pk pk) (Na Na) (Nb Nb))))
+  (origs (Nb (0 1))))
+
+(comment "Nothing left to do")
