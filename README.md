@@ -5,7 +5,7 @@ Reference link to CPSA code and documentation : [MITRE CPSA](https://github.com/
 
 The following protocols were modelled and analyzed:
 1. [Needham Schoder](https://en.wikipedia.org/wiki/Needham-Schroeder_protocol)
-2. [Pake0 and Pake1] (https://en.wikipedia.org/wiki/Password-authenticated_key_agreement)
+2. [Pake0 and Pake1](https://en.wikipedia.org/wiki/Password-authenticated_key_agreement)
 3. [Deffie Helman](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)
 4. [SRP-3](https://en.wikipedia.org/wiki/Secure_Remote_Password_protocol#Implementations)
 
