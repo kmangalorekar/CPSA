@@ -1,5 +1,5 @@
 # CPSA
-Protocol verification of security algorithms using CPSA
+Protocol modelling and verification of security algorithms using CPSA (Cryptographic Protocol Shapes Analyzer)
 
 Reference link to CPSA code and documentation : [MITRE CPSA](https://github.com/mitre/cpsa)
 
